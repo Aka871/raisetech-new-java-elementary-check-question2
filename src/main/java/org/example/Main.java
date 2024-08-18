@@ -20,15 +20,15 @@ public class Main {
           break; //このケースの処理を終了し、switch文を抜けよ
 
         case 2:
-          System.out.println("機能は未実装です。");
+          removeStudent();
           break;
 
         case 3:
-          System.out.println("機能は未実装です。");
+          updateScore();
           break;
 
         case 4:
-          System.out.println("機能は未実装です。");
+          calculateAverage();
           break;
 
         case 5:
@@ -103,6 +103,55 @@ public class Main {
         System.out.println("エラー： 点数は整数で入力してください。");
       }
     }
+  }
+
+  private static void removeStudent() {
+    System.out.print("削除する学生の名前を入力してください: ");
+    String removeName = scanner.nextLine().replaceAll("[\\s　]+", "");
+
+    if (removeName.isEmpty()) {
+      System.out.println("エラー： 名前を入力してください。");
+      return;
+    }
+
+    boolean isRemoved = students.removeIf(student -> student.getName().equals(removeName));
+    if (isRemoved) {
+      System.out.println(removeName + "を削除しました。");
+    } else {
+      System.out.println(removeName + "は見つかりませんでした。");
+    }
+  }
+
+  private static void updateScore() {
+    System.out.print("点数を更新する学生の名前を入力してください: ");
+    String updateName = scanner.nextLine().replaceAll("[\\s　]+", "");
+
+    if (updateName.isEmpty()) {
+      System.out.println("エラー： 名前を入力してください。");
+      return;
+    }
+
+    for (Student student : students) {
+      if (student.getName().equals(updateName)) {
+        System.out.print(updateName + "の新しい点数を入力してください: ");
+        int newScore = getValidScore();
+        student.setScore(newScore);
+        System.out.println(updateName + "の点数を" + newScore + "点に更新しました。");
+        return;
+      }
+    }
+    System.out.println(updateName + "は見つかりませんでした。");
+  }
+
+  private static void calculateAverage() {
+    if (students.isEmpty()) {
+      System.out.println("学生は登録されていません。平均点: 0.0点");
+      return;
+    }
+
+    int sum = students.stream().mapToInt(Student::getScore).sum();
+    double average = (double) sum / students.size();
+    System.out.printf("平均点: %.1f点%n", average);
   }
 
   private static void displayAllStudents() {
